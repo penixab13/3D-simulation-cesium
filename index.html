@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>OpenLayers and Cesium</title>
-    <link rel="stylesheet" href="./lib/v6.5.0-dist/ol.css">
-    <script src="./lib/v6.5.0-dist/ol.js"></script>
-    <script src="./OL_Cesium/Cesium.js"></script>
+    <link rel="stylesheet" href="../lib/v6.5.0-dist/ol.css">
+    <script src="..\lib\v6.5.0-dist\ol.js"></script>
+    <script src="..\3D\libs\Cesium-1.117\Build\Cesium\Cesium.js"></script>
+    <script src="http://localhost:8081/3D/libs/Cesium-1.117/Build/Sandcastle/Sandcastle-header.js"></script>
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.117/Build/Cesium/Cesium.js"></script>
     <link href="https://cesium.com/downloads/cesiumjs/releases/1.117/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
-
+   
     <style>
-        @import url('https://cesium.com/downloads/cesiumjs/releases/1.117/Apps/Sandcastle/CesiumSandcastle.css');
-        @import url('https://cesium.com/downloads/cesiumjs/releases/1.117/Apps/Sandcastle/templates/bucket.css');
+        @import url(../3D/libs/Cesium-1.117/Apps/Sandcastle/CesiumSandcastle.css);
+        @import url(../3D/libs/Cesium-1.117/Apps/Sandcastle/templates/bucket.css);
 
         #map, #cesiumContainer {
             width: 50%;
@@ -47,6 +49,6 @@
     <div class="measure-btn" id="measure-btn">Measure Distance</div>
     <div id="map"></div>
     <div id="cesiumContainer"></div>
-    <script type="module" src="./OL_Cesium/Mesure.js"></script>
+    <script type="module" src="Mesure.js"></script>
 </body>
 </html>
