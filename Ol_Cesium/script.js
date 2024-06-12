@@ -13,12 +13,11 @@ var map = new ol.Map({
 });
 
 Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjNWEwNzFhYS1jMTkyLTRiYzItYjMyMi1hMWE4NmNjYjQ3NTIiLCJpZCI6MjE1MDY1LCJpYXQiOjE3MTU2NzYzMjh9.b9tS-zpu3x9QNBejwtzEcUZumyUHYmkaUW-fuqrkeSo';
-const viewer = new Cesium.Viewer('cesiumContainer', {
+const viewer = new Cesium.Viewer('cesiumContainer',{
     terrain: Cesium.Terrain.fromWorldTerrain(),
-  }); 
-  
+}); 
 const buildingTileset = await Cesium.createOsmBuildingsAsync();
-viewer.scene.primitives.add(buildingTileset);
+// viewer.scene.primitives.add(buildingTileset);
 
 // Variables pour stocker les points cliqués et l'état de mesure
 let points = [];
@@ -147,11 +146,105 @@ document.getElementById('measure-btn').addEventListener('click', function() {
     measuring = true;
     points = []; // Réinitialiser les points pour une nouvelle mesure
     document.getElementById('info').innerText = 'Distance: 0 meters'; // Réinitialiser l'affichage de la distance
-
 });
 
 
-  // STEP 3 CODE
+
+
+
+/*
+addBuildingGeoJSON();
+  viewer.camera.flyTo({
+    destination: Cesium.Cartesian3.fromDegrees(-7.5898, 33.5731, 400),
+    orientation: {
+      heading: Cesium.Math.toRadians(0.0),
+      pitch: Cesium.Math.toRadians(-15.0),
+    }
+  });
+*/
+
+
+
+/*
+// Charger la couche GeoJSON Voirie
+const road = Cesium.GeoJsonDataSource.load('Voirie.geojson', {
+    stroke: Cesium.Color.RED, // Couleur des lignes
+    fill: Cesium.Color.RED.withAlpha(0.5), // Couleur de remplissage (si applicable)
+    strokeWidth: 3, // Largeur des lignes
+    markerSymbol: '?', // Symbole des marqueurs (si applicable)
+    clampToGround: true // Aligner les entités au sol
+  });
+  
+  // Ajouter la couche au viewer et appliquer le style
+  viewer.dataSources.add(road).then(function(dataSource) {
+    // Appliquer le style aux entités
+    const entities = dataSource.entities.values;
+    for (let i = 0; i < entities.length; i++) {
+      const entity = entities[i];
+      entity.polyline.width = new Cesium.ConstantProperty(3);
+      entity.polyline.material = new Cesium.ColorMaterialProperty(Cesium.Color.RED);
+    }
+  
+    // Centrer et zoomer sur la couche
+    viewer.zoomTo(dataSource);
+  
+    // Si nécessaire, définir un zoom personnalisé
+    const boundingSphere = Cesium.BoundingSphere.fromBoundingSpheres(
+      entities.map(entity => entity.computeBoundingSphere())
+    );
+    viewer.camera.flyToBoundingSphere(boundingSphere, {
+      duration: 0, // Réglez la durée à 0 pour un zoom immédiat
+      maximumHeight: 1000, // Ajustez cette valeur selon vos besoins pour contrôler le zoom
+    });
+  });
+
+  
+
+  // Charger la couche GeoJSON
+Cesium.GeoJsonDataSource.load('Bati.geojson', {
+  clampToGround: true // Assurez-vous que les entités sont au sol
+}).then(function(dataSource) {
+  viewer.dataSources.add(dataSource);
+
+  // Appliquer des styles aux entités pour les rendre visibles
+  const entities = dataSource.entities.values;
+  for (let i = 0; i < entities.length; i++) {
+    const entity = entities[i];
+
+    // Assurez-vous que l'entité a une polyline et appliquez un style
+    if (Cesium.defined(entity.polyline)) {
+      entity.polyline.width = new Cesium.ConstantProperty(3);
+      entity.polyline.material = new Cesium.ColorMaterialProperty(Cesium.Color.RED.withAlpha(0.7));
+    }
+
+    // Pour les entités de type Polygon, appliquer également un style
+    if (Cesium.defined(entity.polygon)) {
+      entity.polygon.material = new Cesium.ColorMaterialProperty(Cesium.Color.BLUE.withAlpha(0.3));
+      entity.polygon.outline = true;
+      entity.polygon.outlineColor = new Cesium.ConstantProperty(Cesium.Color.BLACK);
+      entity.polygon.outlineWidth = new Cesium.ConstantProperty(2);
+    }
+  }
+
+  // Centrer et zoomer sur la couche GeoJSON
+  viewer.zoomTo(dataSource).otherwise(function(error) {
+    console.error(error);
+  });
+
+  // Si nécessaire, ajuster le niveau de zoom personnalisé
+  const boundingSphere = Cesium.BoundingSphere.fromBoundingSpheres(
+    entities.map(entity => entity.computeBoundingSphere())
+  );
+  viewer.camera.flyToBoundingSphere(boundingSphere, {
+    duration: 0, // Réglez la durée à 0 pour un zoom immédiat
+    maximumHeight: 500, // Ajustez cette valeur selon vos besoins pour contrôler le zoom
+  });
+}).otherwise(function(error) {
+  console.error(error);
+});
+
+*/
+
 async function addVoirieGeoJSON() {
     // Load the GeoJSON file from Cesium ion.
     const geoJSONURL = await Cesium.IonResource.fromAssetId(2614251);
@@ -165,11 +258,12 @@ async function addVoirieGeoJSON() {
       entity.polygon.classificationType = Cesium.ClassificationType.TERRAIN;
     }
     // Move the camera so that the polygon is in view.
-    viewer.flyTo(dataSource);
+    //viewer.flyTo(dataSource);
   }
   addVoirieGeoJSON();
 
 
+  /*
   // STEP 4 CODE
 async function addBuildingGeoJSON() {
     // Load the GeoJSON file from Cesium ion.
@@ -187,135 +281,73 @@ async function addBuildingGeoJSON() {
     viewer.flyTo(dataSource);
   }
   addBuildingGeoJSON();
-  
-//   const road = Cesium.GeoJsonDataSource.load('Voirie.geojson', {
-//     stroke: Cesium.Color.RED, // Couleur des lignes
-//     fill: Cesium.Color.RED.withAlpha(0.5), // Couleur de remplissage (si applicable)
-//     strokeWidth: 3, // Largeur des lignes
-//     markerSymbol: '?', // Symbole des marqueurs (si applicable)
-//     clampToGround: true // Aligner les entités au sol
-//   });
-  
-//   // Ajouter la couche au viewer et appliquer le style
-//   viewer.dataSources.add(road).then(function(dataSource) {
-//     // Appliquer le style aux entités
-//     const entities = dataSource.entities.values;
-//     for (let i = 0; i < entities.length; i++) {
-//       const entity = entities[i];
-//       entity.polyline.width = new Cesium.ConstantProperty(3);
-//       entity.polyline.material = new Cesium.ColorMaterialProperty(Cesium.Color.RED);
-//     }
-  
-//     // Centrer et zoomer sur la couche
-//     viewer.zoomTo(dataSource);
-  
-//     // Si nécessaire, définir un zoom personnalisé
-//     const boundingSphere = Cesium.BoundingSphere.fromBoundingSpheres(
-//       entities.map(entity => entity.computeBoundingSphere())
-//     );
-//     viewer.camera.flyToBoundingSphere(boundingSphere, {
-//       duration: 0, // Réglez la durée à 0 pour un zoom immédiat
-//       maximumHeight: 1000, // Ajustez cette valeur selon vos besoins pour contrôler le zoom
-//     });
-//   });
+  */
 
 
-//   // Charger la couche GeoJSON
-// Cesium.GeoJsonDataSource.load('Bati.geojson', {
-//   clampToGround: true // Assurez-vous que les entités sont au sol
-// }).then(function(dataSource) {
-//   viewer.dataSources.add(dataSource);
+  // Function to add the GeoJSON data to the Cesium viewer
+function addGeoJsonBuildings(viewer, geoJsonUrl) {
+  // Load the GeoJSON file
+  Cesium.GeoJsonDataSource.load(geoJsonUrl, {
+      clampToGround: true, // Ensures that the base of the buildings is clamped to the ground
+      stroke: Cesium.Color.BLACK, // Outline color for the buildings
+      strokeWidth: 1
+  }).then(function(dataSource) {
+      viewer.dataSources.add(dataSource);
 
-//   // Appliquer des styles aux entités pour les rendre visibles
-//   const entities = dataSource.entities.values;
-//   for (let i = 0; i < entities.length; i++) {
-//     const entity = entities[i];
+      // Get all entities and extrude them based on the 'Elevation' property
+      const entities = dataSource.entities.values;
+      for (let entity of entities) {
+          if (entity.polygon) {
+              // Use the 'Elevation' property to set the extrusion height
+              entity.polygon.extrudedHeight = new Cesium.ConstantProperty(entity.properties.Elevation.getValue() * 3); // Multiplying to enhance the 3D effect
+              entity.polygon.material = Cesium.Color.fromRandom({alpha: 0.6}); // Random color with some transparency
+              entity.polygon.outline = true; // Enable outlines
+              entity.polygon.outlineColor = Cesium.Color.BLACK; // Outline color
+          }
+      }
 
-//     // Assurez-vous que l'entité a une polyline et appliquez un style
-//     if (Cesium.defined(entity.polyline)) {
-//       entity.polyline.width = new Cesium.ConstantProperty(3);
-//       entity.polyline.material = new Cesium.ColorMaterialProperty(Cesium.Color.RED.withAlpha(0.7));
-//     }
-
-//     // Pour les entités de type Polygon, appliquer également un style
-//     if (Cesium.defined(entity.polygon)) {
-//       entity.polygon.material = new Cesium.ColorMaterialProperty(Cesium.Color.BLUE.withAlpha(0.3));
-//       entity.polygon.outline = true;
-//       entity.polygon.outlineColor = new Cesium.ConstantProperty(Cesium.Color.BLACK);
-//       entity.polygon.outlineWidth = new Cesium.ConstantProperty(2);
-//     }
-//   }
-
-//   // Centrer et zoomer sur la couche GeoJSON
-//   viewer.zoomTo(dataSource).otherwise(function(error) {
-//     console.error(error);
-//   });
-
-//   // Si nécessaire, ajuster le niveau de zoom personnalisé
-//   const boundingSphere = Cesium.BoundingSphere.fromBoundingSpheres(
-//     entities.map(entity => entity.computeBoundingSphere())
-//   );
-//   viewer.camera.flyToBoundingSphere(boundingSphere, {
-//     duration: 0, // Réglez la durée à 0 pour un zoom immédiat
-//     maximumHeight: 500, // Ajustez cette valeur selon vos besoins pour contrôler le zoom
-//   });
-// }).otherwise(function(error) {
-//   console.error(error);
-// });
-  
-let floodEntity;  // Global variable to hold the flood simulation entity
-
-function addFloodSimulation(initialHeight) {
-    // Center of the polygon
-    const centerX = -7.62895;
-    const centerY = 33.60712;
-
-    // Multiplier to expand the polygon
-    const expandFactor = 0.001; // Adjust this value to scale the size of the polygon
-
-    const coords = [
-        [-7.628845, 33.607121],  
-        [-7.628364, 33.606783],
-        [-7.628775, 33.606538],
-        [-7.629259, 33.606878]
-    ];
-
-    // Expanding the polygon coordinates
-    const expandedCoords = coords.map(coord => [
-        centerX + (coord[0] - centerX) * (1 + expandFactor),
-        centerY + (coord[1] - centerY) * (1 + expandFactor)
-    ]);
-
-    console.log('Adding flood simulation with initial height:', initialHeight);
-    floodEntity = viewer.entities.add({
-        name: 'Flood Simulation',
-        polygon: {
-            hierarchy: Cesium.Cartesian3.fromDegreesArray(
-                expandedCoords.flat() // Flattening the array to fit the function's input
-            ),
-            extrudedHeight: initialHeight,
-            material: Cesium.Color.BLUE.withAlpha(0.6),
-            outline: true,
-            outlineColor: Cesium.Color.WHITE
-        }
-    });
-    viewer.zoomTo(floodEntity);  // Focus camera on the flood entity
+      // Optional: Adjust the camera to view the loaded GeoJSON data
+      // viewer.flyTo(dataSource);
+  }).catch(function(error) {
+      console.error('Error loading GeoJSON: ', error);
+  });
 }
 
-// Start the simulation with an initial height of 10 meters
-addFloodSimulation(10);
+// Assuming you have a Cesium viewer instance already created
+
+// URL to your GeoJSON file
+const geoJsonUrl = 'Bati.geojson';
+
+// Call the function to add the building
+addGeoJsonBuildings(viewer, geoJsonUrl);
 
 
-function increaseFloodHeight() {
-    if (floodEntity) {
-        var newHeight = floodEntity.polygon.extrudedHeight.getValue() + 10;  // Increase height by 10 meters
-        console.log('Increasing flood height to:', newHeight);
-        floodEntity.polygon.extrudedHeight = newHeight;
-    }
+//add maquette
+
+async function addMaquetteTileset() {
+  // Charger les tuiles 3D depuis Cesium Ion.
+  const tileset = await Cesium.Cesium3DTileset.fromIonAssetId(2617688);
+  
+  // Ajouter les tuiles 3D à la scène.
+  viewer.scene.primitives.add(tileset);
+
+  // Ajuster la vue pour centrer sur les tuiles.
+  viewer.zoomTo(tileset);
 }
 
-// Start the simulation with an initial height of 10 meters
-addFloodSimulation(60);
+addMaquetteTileset();
+// Ajouter la couche d'inondation
+const floodLayer = viewer.imageryLayers.addImageryProvider(
+  await Cesium.IonImageryProvider.fromAssetId(2617787)
+);
+// Ajouter la couche d'inondation
+// const floodLayer = viewer.imageryLayers.addImageryProvider(
+//   await Cesium.IonImageryProvider.fromAssetId(2617787, {
+//     colorize: true, // Activer la colorisation
+//     colorizeAmount: 1.0, // Niveau de colorisation (1.0 pour une colorisation complète)
+//     colorizeColor: Cesium.Color.BLUE // Couleur de la colorisation (bleu dans ce cas)
+//   })
+// );
 
-// Increase the height every 500 milliseconds (0.5 seconds)
-setInterval(increaseFloodHeight, 1000);
+
+
