@@ -27,6 +27,7 @@
             padding: 10px;
             border: 1px solid black;
             z-index: 100;
+            color: white;
         }
 
         .measure-btn {
@@ -39,6 +40,19 @@
             border: 1px solid black;
             z-index: 101;
             cursor: pointer;
+            color: white;
+        }
+
+        #height-widget {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgb(4, 4, 109);
+            padding: 10px;
+            border: 1px solid black;
+            color: white;
+            z-index: 102;
         }
     </style>
 </head>
@@ -47,6 +61,7 @@
     <div class="measure-btn" id="measure-btn">Measure Distance</div>
     <div id="map"></div>
     <div id="cesiumContainer"></div>
+    <div id="height-widget">No building selected</div>
     <script type="module" src="./Ol_Cesium/script.js"></script>
 </body>
 </html>
